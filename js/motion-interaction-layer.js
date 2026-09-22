@@ -32,7 +32,7 @@
 
   /* ------------------------------------------------------------------ theme */
   var Theme = {
-    KEY: "ta-theme",
+    KEY: "ta-theme-v2",
     init: function () {
       document.addEventListener("click", function (e) {
         var btn = e.target.closest("[data-theme-toggle]");

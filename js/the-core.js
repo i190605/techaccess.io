@@ -621,7 +621,7 @@
     W = Math.min(r.width, 4000);
     H = Math.min(r.height, 3000);
     if (W < 2 || H < 2) return false;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, W < 700 ? 1.5 : 2));
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
@@ -745,7 +745,8 @@
     var fa = focus * TURN;
     var fy = (focus - (N - 1) / 2) * RISE;
     var camA = fa + 0.42 + pX * 0.35;
-    var camR = 9.6;
+    var portrait = W / H < 0.85;
+    var camR = portrait ? 9.6 + (0.85 - W / H) * 11 : 9.6;
 
     camera.position.set(
       Math.cos(camA) * camR,
@@ -757,7 +758,10 @@
        own X to push the structure right. Done after lookAt so the aim is
        untouched and only the framing moves. The shift scales down on narrower
        viewports, where a fixed offset would push the core off screen. */
-    camera.translateX(W > 1280 ? -1.75 : W > 1060 ? -1.15 : -0.35);
+    camera.translateX(W > 1280 ? -1.75 : W > 1060 ? -1.15 : portrait ? 0.35 : -0.35);
+    /* On a tall phone frame, lift the structure into the upper half so the
+       readout at the bottom never covers the focused step. */
+    if (portrait) camera.translateY(-0.75);
 
     /* Key light and glow ride the focused blade. */
     var lx = Math.cos(fa) * (RADIUS + 0.9);

@@ -1453,10 +1453,27 @@ button.chip[aria-pressed="true"]::before { background: #fff; }
 }
 
 @media (max-width: 859px) {
-  /* Below this the stage cannot hold the structure and the readout at once.
-     The index is already visible, so simply drop the scroll budget. */
-  .core-host[data-core-mode="live"] .core-scroll { min-height: 0; }
-  .core-host[data-core-mode="live"] .core-stage { display: none; }
+  /* Phones and small tablets: the core still runs, stacked vertically. The
+     structure owns the upper part of the frame and the readout sits at the
+     bottom over a dark fade, above the sixteen-tick rail. */
+  .core-host[data-core-mode="live"] .core-fallback { display: none; }
+  .core-host[data-core-mode="live"] .core-scroll { min-height: 320vh; }
+  .core-stage::after {
+    background:
+      radial-gradient(140% 70% at 50% 35%, transparent 45%, rgba(5, 5, 10, 0.7) 100%),
+      linear-gradient(to top, rgba(5, 5, 10, 0.96) 0%, rgba(5, 5, 10, 0.82) 30%, transparent 55%);
+  }
+  .core-ui { gap: 0.9rem; padding-block: 1rem 1.25rem; }
+  .core-head { padding-top: calc(var(--nav-h) - 0.25rem); }
+  .core-head .mono { display: none; }
+  .core-readout { align-self: end; max-width: none; gap: 0.5rem; }
+  .core-readout__n { font-size: 1.6rem; }
+  .core-readout__t { font-size: 1.45rem; }
+  .core-readout__d { font-size: 0.9rem; max-width: 40ch; }
+  .core-rail { gap: 0.2rem; }
+  .core-tick { height: 26px; }
+  .core-tick__n { display: none; }
+  .core-scrollcue a { display: none; }
 }
 
 /* --- Sector topologies ------------------------------------------------------

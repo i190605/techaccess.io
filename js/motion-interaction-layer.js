@@ -181,15 +181,30 @@
         });
       });
 
+      /* A fully clipped element (data-reveal="clip") has no visible area, so
+         IntersectionObserver never reports it. Watch its parent instead and
+         reveal the child when the parent arrives. */
+      var proxies = new Map();
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-in");
+          (proxies.get(entry.target) || [entry.target]).forEach(function (el) {
+            el.classList.add("is-in");
+          });
           io.unobserve(entry.target);
         });
       }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
 
-      items.forEach(function (i) { io.observe(i); });
+      items.forEach(function (i) {
+        var target = i;
+        if (i.getAttribute("data-reveal") === "clip" && i.parentElement) {
+          target = i.parentElement;
+          var list = proxies.get(target) || [];
+          list.push(i);
+          proxies.set(target, list);
+        }
+        io.observe(target);
+      });
     }
   };
 

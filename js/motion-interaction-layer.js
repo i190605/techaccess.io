@@ -581,7 +581,9 @@
          The stylesheet keys the absolute positioning off this attribute, so
          leaving it unset guarantees the stages stay a readable stacked list
          rather than four blocks rendered on top of each other. */
-      var canPin = !reduced.matches && window.innerWidth >= 900;
+      /* Phones get the pinned scrub too; only reduced motion and very
+         narrow screens fall back to the stacked list. */
+      var canPin = !reduced.matches && window.innerWidth >= 340;
       root.setAttribute("data-process-mode", canPin ? "pinned" : "stacked");
 
       if (!canPin) {
